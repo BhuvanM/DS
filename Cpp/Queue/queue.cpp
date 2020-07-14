@@ -104,23 +104,38 @@ class LinkedList{
         
 };
 
-
+template <typename T>
+class QueueLL{
+    public:
+        LinkedList<T> LL;
+        
+        void enqueue(T val){
+            LL.addFirst(val);
+        }
+        
+        T dequeue(){
+            auto value = LL.pop();
+            return value;
+            
+        }
+        
+        void print(){
+            LL.print();
+        }
+        
+};
 
 
 int main() {
     
-    LinkedList<string> LL;
-    LL.addFirst("node1");
-    LL.addFirst("node2");
-    LL.addFirst("node3");
-    LL.print();
-    auto value = LL.pop();
-    LL.print();
-    cout<<value;
-    
-    
-    
-    
+    QueueLL<string> QL;
+    QL.enqueue("node1");
+    QL.enqueue("node2");
+    QL.enqueue("node3");
+    QL.print();
+    cout<<QL.dequeue()<<endl;
+    QL.print();
+
 	//code
 	return 0;
 }
