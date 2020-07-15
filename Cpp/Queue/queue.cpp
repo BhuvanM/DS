@@ -56,71 +56,138 @@ class LinkedList{
         shared_ptr<Node<T>> tail;
         int count;
         
-        void addFirst(shared_ptr<Node<T>>& node){
-            shared_ptr<Node<T>> temp = head;
-            head = node;
-            node->setNext(temp);
+        void addLast(shared_ptr<Node<T>>& node){
             count ++;
             if(count == 1){
+                head  = node;
                 tail = head;
-            }
-        }
-        
-        void popLast(){
-            shared_ptr<Node<T>> temp = head;
-            while(temp->getNext()->getNext() != nullptr){
-                temp = temp->getNext();
+                return;
             }
             
-            temp->delNext();
-            tail = temp;
+            shared_ptr<Node<T>> temp = tail;
+            tail->setNext(node);
+            tail = node;
+        }
+        
+        void popFirst(){
+            head = head->getNext();
+            count --;
         }
         
     public:
         LinkedList():count(0){}
         ~LinkedList(){};
         
-        void addFirst(T val){
+        
+        void addLast(T val){
             auto new_node = make_shared<Node<T>>(val);
-            addFirst(new_node);
+            addLast(new_node);
         }
         
-        T pop(){
-            auto pop_val = tail->getValue();
-            popLast();
-            return pop_val;
+        T popFront(){
+            if(isEmpty()){
+                return "Emmpty queue";
+            }
+            auto val = head->getValue();
+            popFirst();
+            return val;
+        }
+        
+        int isEmpty(){
+            if(count < 1){
+                return true;
+            }
+            return false;
         }
         
         void print(){
+            cout<<"BACK| <-";
             auto temp=head;
             while(temp != nullptr){
-            cout<<temp->getValue()<<"->";
+            cout<<temp->getValue()<<"<-";
             temp = temp->getNext();
             }
-            cout<<"NULL";
+            cout<<"| FRONT";
             cout<<endl;
         
         };
         
 };
 
-template <typename T>
+
+template <typename T>  //Queue class for LL Implementation
 class QueueLL{
     public:
+
         LinkedList<T> LL;
-        
         void enqueue(T val){
-            LL.addFirst(val);
+               LL.addLast(val);
         }
         
         T dequeue(){
-            auto value = LL.pop();
+            auto value = LL.popFront();
             return value;
-            
         }
         
+        int isEmpty(){
+            return LL.isEmpty();
+        }
         void print(){
             LL.print();
+        }
+        
+};
+
+template <typename T> //Queue class for array implementation
+class QueueArr{
+    private:
+        T read = 0,write = 0; //index
+        T arr[5]; //Fixed size was mentioned as req
+        int maxLen = 5;
+        //int count;
+        
+    public:
+        void enqueue(T val){ //YET TO BE FIXED
+            cout<<read<<write;
+            if(isFull()){
+                cout<<"Queue is Full";
+                return;
+            }
+            arr[write] = val;
+            if((write+1) % maxLen == read-1){
+                cout<<"FULL";
+                return;
+            }
+            write = (write+1) % maxLen;
+        }
+        
+        T dequeue(){
+            if(isEmpty()){
+                cout<<"Queue is empty";
+                return -1;
+            }
+            auto value = arr[read];
+            read = (read+1) % maxLen;
+            //count --;
+            return value;
+        }
+        
+        int isEmpty(){
+            return (read == write);
+        }
+        
+        int isFull(){
+            //if((read%maxLen)-1 == write)
+            return ((read%maxLen)-2 == write%maxLen);
+        }
+        void print(){
+            int i = read;
+            cout<<"read"<<read<<"write"<<write;
+            while(i != write){
+                cout<<arr[i]<<"<-";
+                i = (i+1) % maxLen;
+            }
+            cout<<endl;
         }
         
 };
@@ -128,13 +195,28 @@ class QueueLL{
 
 int main() {
     
-    QueueLL<string> QL;
-    QL.enqueue("node1");
-    QL.enqueue("node2");
-    QL.enqueue("node3");
-    QL.print();
-    cout<<QL.dequeue()<<endl;
-    QL.print();
+    // QueueLL<string> QL;
+    // QL.enqueue("node1");
+    // QL.enqueue("node2");
+    // QL.enqueue("node3");
+    // QL.print();
+    // cout<<QL.dequeue()<<endl;
+    // QL.dequeue();
+    // QL.dequeue();
+    // cout<<QL.dequeue()<<endl;
+    // QL.print();
+    
+    QueueArr<int> QR; //limitation, string cannot be used in this for now
+    QR.enqueue(1);
+    QR.enqueue(2);
+    QR.enqueue(3);
+    QR.enqueue(4);
+    QR.enqueue(5);
+    QR.enqueue(6);
+    //QR.enqueue(7);
+    //QR.dequeue();
+    QR.print();
+    
 
 	//code
 	return 0;
