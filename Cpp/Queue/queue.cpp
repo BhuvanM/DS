@@ -33,8 +33,8 @@ public:
         }
         
 private:
-T node_val;
-std::shared_ptr<Node<T>> node_next;
+	T node_val;
+	std::shared_ptr<Node<T>> node_next;
 };
 
 //print function
