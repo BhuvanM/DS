@@ -142,22 +142,17 @@ template <typename T> //Queue class for array implementation
 class QueueArr{
     private:
         T read = 0,write = 0; //index
-        T arr[5]; //Fixed size was mentioned as req
+        T arr[5]; //Fixed size was mentioned as req  |4 elements can be there in queue
         int maxLen = 5;
-        //int count;
+        int mod(int a, int b) { return (a % b + b) % b; }
         
     public:
-        void enqueue(T val){ //YET TO BE FIXED
-            cout<<read<<write;
+        void enqueue(T val){
             if(isFull()){
-                cout<<"Queue is Full";
+                cout<<"Queue is Full"<<endl;
                 return;
             }
             arr[write] = val;
-            if((write+1) % maxLen == read-1){
-                cout<<"FULL";
-                return;
-            }
             write = (write+1) % maxLen;
         }
         
@@ -167,8 +162,7 @@ class QueueArr{
                 return -1;
             }
             auto value = arr[read];
-            read = (read+1) % maxLen;
-            //count --;
+            read = mod((read+1),maxLen);
             return value;
         }
         
@@ -177,15 +171,13 @@ class QueueArr{
         }
         
         int isFull(){
-            //if((read%maxLen)-1 == write)
-            return ((read%maxLen)-2 == write%maxLen);
+            return (mod(read -1,maxLen) == mod(write,maxLen));
         }
         void print(){
             int i = read;
-            cout<<"read"<<read<<"write"<<write;
             while(i != write){
                 cout<<arr[i]<<"<-";
-                i = (i+1) % maxLen;
+                i = mod((i+1) , maxLen);
             }
             cout<<endl;
         }
@@ -207,19 +199,15 @@ int main() {
     // QL.print();
     
     QueueArr<int> QR; //limitation, string cannot be used in this for now
+    QR.enqueue(0);
     QR.enqueue(1);
     QR.enqueue(2);
-    QR.enqueue(3);
-    QR.enqueue(4);
-    QR.enqueue(5);
-    QR.enqueue(6);
-    //QR.enqueue(7);
-    //QR.dequeue();
+    QR.print();
+    QR.dequeue();
+    QR.dequeue();
     QR.print();
     
-
-	//code
-	return 0;
+    return 0;
 }
 
 
