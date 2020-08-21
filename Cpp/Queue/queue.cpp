@@ -2,6 +2,7 @@
 #include <iostream>
 #include<memory>
 #include<string>
+#include <vector> 
 using namespace std;
 //Linked list
 
@@ -146,7 +147,7 @@ template <typename T> //Queue class for array implementation
 class QueueArray{
     private:
         T read = 0,write = 0; //index
-        T arr[5]; //Fixed size was mentioned as req  |4 elements can be there in queue
+        T arr[5];
         int maxLen = 5;
         int mod(int a, int b) { return (a % b + b) % b; }
         
@@ -194,8 +195,48 @@ class QueueArray{
 };
 
 
+template <typename T> //Queue class for array implementation
+class QueueDynamicArray{
+    private:
+
+        vector<T> arr;
+        
+    public:
+        bool enqueue(T val){
+            arr.insert(arr.end(),val);
+            return true;
+        }
+        
+        T * dequeue(){
+            T *valptr;
+            if(isEmpty()){
+                valptr = nullptr;
+            } else {
+                T val =  *arr.begin();
+                valptr = &val;
+                arr.erase(arr.begin());
+            }
+
+            return valptr;
+        }
+        
+        bool isEmpty(){
+            return arr.empty();
+        }
+        
+        void print(){
+            for(auto i = arr.begin(); i != arr.end(); i++){
+                cout << *i << "<-";
+            }
+            cout<<endl;
+        }
+        
+};
+
+
 int main() {
     
+    //Queue using linked list
     QueueLinkedList<string> QL;
     QL.enqueue("node1");
     QL.enqueue("node2");
@@ -208,9 +249,9 @@ int main() {
     if(QL.dequeue() == nullptr){
         cout<<"Linked list Queue is empty \n";
     }
-    
-     QL.print();
+    QL.print();
 
+    //Circular queue using fixed array
     QueueArray<int> QR; //limitation, string cannot be used in this for now
     QR.enqueue(0);
     QR.enqueue(1);
@@ -225,6 +266,24 @@ int main() {
     }
     QR.print();
     
+    //Queue using dynamic array
+    QueueDynamicArray<int> QDR;
+    QDR.enqueue(1);
+    QDR.enqueue(2);
+    QDR.enqueue(3);
+    QDR.enqueue(4);
+    QDR.enqueue(5);
+    QDR.print();
+    QDR.dequeue();
+    cout<<*QDR.dequeue()<<'\n';
+    cout<<*QDR.dequeue()<<'\n';
+    cout<<*QDR.dequeue()<<'\n';
+    cout<<*QDR.dequeue()<<'\n';
+    
+    if(QR.dequeue() == nullptr){
+        cout<<" Dynamic Array Queue is empty \n";
+    }
+    QDR.print();
     return 0;
 }
 
