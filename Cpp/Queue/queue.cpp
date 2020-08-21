@@ -52,13 +52,11 @@ void print(shared_ptr<Node<T>>& node){
 template <typename T>
 class LinkedList{
     private:
-        shared_ptr<Node<T>> head;
-        shared_ptr<Node<T>> tail;
-        int count;
+        shared_ptr<Node<T>> head = NULL;
+        shared_ptr<Node<T>> tail = NULL;
         
         bool addLast(shared_ptr<Node<T>>& node){
-            count ++;
-            if(count == 1){
+            if(head == NULL){
                 head  = node;
                 tail = head;
                 return true;
@@ -72,12 +70,11 @@ class LinkedList{
         
         bool popFirst(){
             head = head->getNext();
-            count --;
             return true;
         }
         
     public:
-        LinkedList():count(0){}
+        LinkedList(){}
         ~LinkedList(){};
         
         
@@ -99,7 +96,7 @@ class LinkedList{
         }
         
         bool isEmpty(){
-            if(count < 1){
+            if(head == NULL){
                 return true;
             }
             return false;
@@ -279,7 +276,7 @@ int main() {
     cout<<*QDR.dequeue()<<'\n';
     cout<<*QDR.dequeue()<<'\n';
     cout<<*QDR.dequeue()<<'\n';
-    
+
     if(QR.dequeue() == nullptr){
         cout<<" Dynamic Array Queue is empty \n";
     }
