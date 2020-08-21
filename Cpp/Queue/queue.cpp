@@ -6,7 +6,6 @@ using namespace std;
 //Linked list
 
 
-
 //Node class
 template <typename T>
 class Node{
@@ -56,22 +55,24 @@ class LinkedList{
         shared_ptr<Node<T>> tail;
         int count;
         
-        void addLast(shared_ptr<Node<T>>& node){
+        bool addLast(shared_ptr<Node<T>>& node){
             count ++;
             if(count == 1){
                 head  = node;
                 tail = head;
-                return;
+                return true;
             }
             
             shared_ptr<Node<T>> temp = tail;
             tail->setNext(node);
             tail = node;
+            return true;
         }
         
-        void popFirst(){
+        bool popFirst(){
             head = head->getNext();
             count --;
+            return true;
         }
         
     public:
@@ -79,21 +80,24 @@ class LinkedList{
         ~LinkedList(){};
         
         
-        void addLast(T val){
+        bool addLast(T val){
             auto new_node = make_shared<Node<T>>(val);
-            addLast(new_node);
+            return addLast(new_node);
         }
         
-        T popFront(){
+        T * popFront(){
+            T *valptr;
             if(isEmpty()){
-                return "Emmpty queue";
+                valptr = nullptr;
+            } else {
+                auto val = head->getValue();
+                valptr = &val;
+                popFirst();
             }
-            auto val = head->getValue();
-            popFirst();
-            return val;
+            return valptr;
         }
         
-        int isEmpty(){
+        bool isEmpty(){
             if(count < 1){
                 return true;
             }
@@ -116,20 +120,20 @@ class LinkedList{
 
 
 template <typename T>  //Queue class for LL Implementation
-class QueueLL{
+class QueueLinkedList{
     public:
 
         LinkedList<T> LL;
-        void enqueue(T val){
-               LL.addLast(val);
+        bool enqueue(T val){
+            return LL.addLast(val);
         }
         
-        T dequeue(){
-            auto value = LL.popFront();
-            return value;
+        T * dequeue(){
+            //auto value = LL.popFront();
+            return LL.popFront();
         }
         
-        int isEmpty(){
+        bool isEmpty(){
             return LL.isEmpty();
         }
         void print(){
@@ -139,7 +143,7 @@ class QueueLL{
 };
 
 template <typename T> //Queue class for array implementation
-class QueueArr{
+class QueueArray{
     private:
         T read = 0,write = 0; //index
         T arr[5]; //Fixed size was mentioned as req  |4 elements can be there in queue
@@ -147,32 +151,37 @@ class QueueArr{
         int mod(int a, int b) { return (a % b + b) % b; }
         
     public:
-        void enqueue(T val){
+        bool enqueue(T val){
             if(isFull()){
-                cout<<"Queue is Full"<<endl;
-                return;
+                return false;
             }
             arr[write] = val;
             write = (write+1) % maxLen;
+            
+            return true;
         }
         
-        T dequeue(){
+        T * dequeue(){
+            T *valptr;
             if(isEmpty()){
-                cout<<"Queue is empty";
-                return -1;
+                valptr = nullptr;
+            } else {
+                auto val = arr[read];
+                read = mod((read+1),maxLen);
+                valptr = &val;
             }
-            auto value = arr[read];
-            read = mod((read+1),maxLen);
-            return value;
+
+            return valptr;
         }
         
-        int isEmpty(){
+        bool isEmpty(){
             return (read == write);
         }
         
-        int isFull(){
+        bool isFull(){
             return (mod(read -1,maxLen) == mod(write,maxLen));
         }
+        
         void print(){
             int i = read;
             while(i != write){
@@ -187,24 +196,33 @@ class QueueArr{
 
 int main() {
     
-    // QueueLL<string> QL;
-    // QL.enqueue("node1");
-    // QL.enqueue("node2");
-    // QL.enqueue("node3");
-    // QL.print();
-    // cout<<QL.dequeue()<<endl;
-    // QL.dequeue();
-    // QL.dequeue();
-    // cout<<QL.dequeue()<<endl;
-    // QL.print();
+    QueueLinkedList<string> QL;
+    QL.enqueue("node1");
+    QL.enqueue("node2");
+    QL.enqueue("node3");
+    QL.print();
+    QL.dequeue();
+    QL.dequeue();
+    QL.dequeue();
+    QL.print();
+    if(QL.dequeue() == nullptr){
+        cout<<"Linked list Queue is empty \n";
+    }
     
-    QueueArr<int> QR; //limitation, string cannot be used in this for now
+     QL.print();
+
+    QueueArray<int> QR; //limitation, string cannot be used in this for now
     QR.enqueue(0);
     QR.enqueue(1);
     QR.enqueue(2);
     QR.print();
-    QR.dequeue();
-    QR.dequeue();
+    //QR.dequeue();
+    cout<<*QR.dequeue()<<'\n';
+    cout<<*QR.dequeue()<<'\n';
+    cout<<*QR.dequeue()<<'\n';
+    if(QR.dequeue() == nullptr){
+        cout<<" Array Queue is empty \n";
+    }
     QR.print();
     
     return 0;
